@@ -1,6 +1,6 @@
 import React from 'react';
 
-import NewTaskForm from '../newTaskForm';
+import NewTaskForm from '../NewTaskForm';
 
 function Header({ onTaskAdded }) {
   return (

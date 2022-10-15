@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-import Header from '../header';
-import TaskList from '../taskList';
-import Footer from '../footer';
+import Header from '../Header';
+import TaskList from '../TaskList';
+import Footer from '../Footer';
 
 export default class TodoApp extends Component {
   static createTodoItem(description) {
