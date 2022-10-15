@@ -1,2 +1,2 @@
-# todos_react
-# todos
+# todos app
+Vercel page: https://todos-lucienkarri.vercel.app/
