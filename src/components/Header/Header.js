@@ -1,6 +1,7 @@
 import React from 'react';
 
 import NewTaskForm from '../NewTaskForm';
+import './Header.css';
 
 function Header({ onTaskAdded }) {
   return (

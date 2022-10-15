@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import './NewTaskForm.css';
+
 export default class NewTaskForm extends Component {
   state = {
     description: '',
@@ -25,6 +27,7 @@ export default class NewTaskForm extends Component {
 
   render() {
     const { description } = this.state;
+
     return (
       <form onSubmit={this.onSubmit}>
         <input

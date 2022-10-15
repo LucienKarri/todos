@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Header from '../Header';
 import TaskList from '../TaskList';
 import Footer from '../Footer';
+import './TodoApp.css';
 
 export default class TodoApp extends Component {
   static createTodoItem(description) {
