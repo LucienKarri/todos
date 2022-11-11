@@ -28,19 +28,18 @@ export default class TaskTimer extends Component {
   }
 
   tick = () => {
-    let min = this.state.min;
-    let sec = this.state.sec;
+    this.setState(({ min, sec }) => {
+      if (sec < 59) {
+        sec++;
+      } else {
+        sec = 0;
+        min++;
+      }
 
-    if (sec < 59) {
-      sec++;
-    } else {
-      sec = 0;
-      min++;
-    }
-
-    this.setState({
-      min,
-      sec,
+      return {
+        min,
+        sec,
+      };
     });
   };
 
