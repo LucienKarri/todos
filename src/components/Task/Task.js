@@ -3,6 +3,7 @@ import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
 
 import './Task.css';
+import TaskTimer from '../TaskTimer/TaskTimer';
 
 export default class Task extends Component {
   state = {
@@ -68,8 +69,9 @@ export default class Task extends Component {
             defaultChecked={isChecked}
           />
           <label htmlFor={task.id}>
-            <span className="description">{task.description}</span>
-            <span className="created">{formatDistanceToNow(task.created)}</span>
+            <span className="title">{task.description}</span>
+            <TaskTimer timerMin={task.timerMin} timerSec={task.timerSec} isChecked={isChecked} />
+            <span className="description">{formatDistanceToNow(task.created)}</span>
           </label>
           <button type="button" className="icon icon-edit" onClick={this.onEditClick} />
           <button type="button" className="icon icon-destroy" onClick={onDeleted} />

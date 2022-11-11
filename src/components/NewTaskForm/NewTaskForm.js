@@ -5,38 +5,64 @@ import './NewTaskForm.css';
 
 export default class NewTaskForm extends Component {
   state = {
-    description: '',
+    title: '',
+    timerMin: '',
+    timerSec: '',
   };
 
-  onLabelChange = (event) => {
+  onTitleChange = (event) => {
     this.setState({
-      description: event.target.value,
+      title: event.target.value,
+    });
+  };
+
+  onMinChange = (event) => {
+    this.setState({
+      timerMin: event.target.value,
+    });
+  };
+
+  onSecChange = (event) => {
+    this.setState({
+      timerSec: event.target.value,
     });
   };
 
   onSubmit = (event) => {
     const { onTaskAdded } = this.props;
-    const { description } = this.state;
+    const { title, timerMin, timerSec } = this.state;
 
     event.preventDefault();
-    onTaskAdded(description);
+    onTaskAdded(title, timerMin, timerSec);
     this.setState({
-      description: '',
+      title: '',
+      timerMin: '',
+      timerSec: '',
     });
   };
 
   render() {
-    const { description } = this.state;
+    const { title, timerMin, timerSec } = this.state;
 
     return (
-      <form onSubmit={this.onSubmit}>
+      <form onSubmit={this.onSubmit} className="new-todo-form">
+        <input autoFocus className="new-todo" placeholder="Task" onChange={this.onTitleChange} value={title} />
         <input
-          autoFocus
-          className="new-todo"
-          placeholder="What needs to be done?"
-          onChange={this.onLabelChange}
-          value={description}
+          className="new-todo-form__timer"
+          placeholder="Min"
+          onChange={this.onMinChange}
+          value={timerMin}
+          type="number"
         />
+        <input
+          className="new-todo-form__timer"
+          placeholder="Sec"
+          onChange={this.onSecChange}
+          value={timerSec}
+          type="number"
+          max="59"
+        />
+        <input className="new-todo-form__submit" type="submit" />
       </form>
     );
   }

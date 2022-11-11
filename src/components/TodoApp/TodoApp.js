@@ -7,10 +7,12 @@ import Footer from '../Footer';
 import './TodoApp.css';
 
 export default class TodoApp extends Component {
-  static createTodoItem(description) {
+  static createTodoItem(description, timerMin, timerSec) {
     const task = {
       id: uuidv4(),
       description,
+      timerMin,
+      timerSec,
       created: new Date(),
       completed: false,
     };
@@ -23,18 +25,24 @@ export default class TodoApp extends Component {
       {
         id: uuidv4(),
         description: 'learn react',
+        timerMin: 13,
+        timerSec: 37,
         created: new Date(),
         completed: false,
       },
       {
         id: uuidv4(),
         description: 'practice react',
+        timerMin: 13,
+        timerSec: 37,
         created: new Date(),
         completed: false,
       },
       {
         id: uuidv4(),
         description: 'relax',
+        timerMin: 13,
+        timerSec: 37,
         created: new Date(),
         completed: false,
       },
@@ -53,8 +61,8 @@ export default class TodoApp extends Component {
     });
   };
 
-  addItem = (description) => {
-    const newItem = TodoApp.createTodoItem(description);
+  addItem = (description, timerMin, timerSec) => {
+    const newItem = TodoApp.createTodoItem(description, timerMin, timerSec);
 
     this.setState(({ data }) => {
       const newData = [newItem, ...data];
