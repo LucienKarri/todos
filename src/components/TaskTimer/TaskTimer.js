@@ -63,12 +63,15 @@ export default class TaskTimer extends Component {
   };
 
   render() {
-    const { min, sec } = this.state;
+    const { min, sec, started } = this.state;
 
     return (
       <span className="description">
-        <button className="icon icon-play" onClick={this.onPlayClick}></button>
-        <button className="icon icon-pause" onClick={this.onPauseClick}></button>
+        {started ? (
+          <button className="icon icon-pause" onClick={this.onPauseClick}></button>
+        ) : (
+          <button className="icon icon-play" onClick={this.onPlayClick}></button>
+        )}
         <span>{` ${this.transformTimer(min)}:${this.transformTimer(sec)} `}</span>
       </span>
     );
