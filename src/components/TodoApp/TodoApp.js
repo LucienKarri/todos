@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import Header from '../Header';
@@ -6,6 +6,140 @@ import TaskList from '../TaskList';
 import Footer from '../Footer';
 import './TodoApp.css';
 
+const initialData = [
+  {
+    id: uuidv4(),
+    description: 'learn react',
+    min: 13,
+    sec: 37,
+    created: new Date(),
+    completed: false,
+  },
+  {
+    id: uuidv4(),
+    description: 'practice react',
+    min: 13,
+    sec: 37,
+    created: new Date(),
+    completed: false,
+  },
+  {
+    id: uuidv4(),
+    description: 'relax',
+    min: 13,
+    sec: 37,
+    created: new Date(),
+    completed: false,
+  },
+];
+
+const TodoApp = () => {
+  const [todos, setTodos] = useState(initialData);
+  const [filter, setFilter] = useState('all');
+  const [filteredTodos, setFilteredTodos] = useState(todos);
+
+  useEffect(() => {
+    setFilteredTodos(myFilter(filter));
+  }, [filter, todos]);
+
+  const createTask = (description, min, sec) => {
+    return {
+      id: uuidv4(),
+      description,
+      min,
+      sec,
+      created: new Date(),
+      completed: false,
+    };
+  };
+
+  const addTask = (description, min, sec) => {
+    setTodos((todos) => {
+      const newTask = createTask(description, min, sec);
+
+      return [newTask, ...todos];
+    });
+  };
+
+  const deleteTask = (id) => {
+    setTodos((todos) => {
+      const newTodos = todos.filter((task) => task.id !== id);
+
+      return newTodos;
+    });
+  };
+
+  const editTask = (id, description) => {
+    setTodos((todos) => {
+      const newTodos = todos.map((task) => {
+        if (task.id === id) {
+          task.description = description;
+        }
+        return task;
+      });
+
+      return newTodos;
+    });
+  };
+
+  const onToggleCompleted = (id) => {
+    setTodos((todos) => {
+      const newTodos = todos.map((task) => {
+        if (task.id === id) {
+          task.completed = !task.completed;
+        }
+
+        return task;
+      });
+
+      return newTodos;
+    });
+  };
+
+  const onClearCompleted = () => {
+    const needDelete = todos.filter((task) => task.completed);
+    needDelete.forEach((task) => deleteTask(task.id));
+  };
+
+  const onFilterChange = (value) => {
+    setFilter(value);
+  };
+
+  const myFilter = (value) => {
+    switch (value) {
+      case 'active':
+        return todos.filter((elem) => !elem.completed);
+      case 'completed':
+        return todos.filter((elem) => elem.completed);
+      case 'all':
+      default:
+        return todos;
+    }
+  };
+
+  return (
+    <section className="todoapp">
+      <Header onTaskAdded={addTask} />
+      <section className="main">
+        <TaskList
+          tasks={filteredTodos}
+          onTaskDeleted={deleteTask}
+          onToggleCompleted={onToggleCompleted}
+          onTaskEdited={editTask}
+        />
+        <Footer
+          tasksLeft={todos.filter((task) => !task.completed).length}
+          onClearCompleted={onClearCompleted}
+          filterValue={filter}
+          onFilterChange={onFilterChange}
+        />
+      </section>
+    </section>
+  );
+};
+
+export default TodoApp;
+/*
 export default class TodoApp extends Component {
   static createTodoItem(description, timerMin, timerSec) {
     const task = {
@@ -149,3 +283,4 @@ export default class TodoApp extends Component {
     );
   }
 }
+*/

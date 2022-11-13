@@ -106,13 +106,9 @@
 
 .todo-list li .icon-pause,
 .todo-list li .icon-play {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
-}
-
-.todo-list li .icon-play {
   font-size: 15px;
+  width: 20px;
+  height: 20px;
 }
 
 .icon-pause:after {
@@ -121,6 +117,12 @@
 
 .icon-play:after {
   content: '▶';
+}
+
+.timer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .edit {
