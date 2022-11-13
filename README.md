@@ -1,3 +1,3 @@
-# todos-timer app
+# todos-hooks app
 
-Vercel page: https://todos-git-timer-lucienkarri.vercel.app/
+Vercel page: https://todos-git-hooks-lucienkarri.vercel.app/
