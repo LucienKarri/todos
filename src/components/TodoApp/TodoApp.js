@@ -7,12 +7,11 @@ import Footer from '../Footer';
 import './TodoApp.css';
 
 export default class TodoApp extends Component {
-  static createTodoItem(description, timerMin, timerSec) {
+  static createTodoItem(description, timeLeft) {
     const task = {
       id: uuidv4(),
       description,
-      timerMin,
-      timerSec,
+      timeLeft,
       created: new Date(),
       completed: false,
     };
@@ -25,24 +24,21 @@ export default class TodoApp extends Component {
       {
         id: uuidv4(),
         description: 'learn react',
-        timerMin: 13,
-        timerSec: 37,
+        timeLeft: 123,
         created: new Date(),
         completed: false,
       },
       {
         id: uuidv4(),
         description: 'practice react',
-        timerMin: 13,
-        timerSec: 37,
+        timeLeft: 456,
         created: new Date(),
         completed: false,
       },
       {
         id: uuidv4(),
         description: 'relax',
-        timerMin: 13,
-        timerSec: 37,
+        timeLeft: 789,
         created: new Date(),
         completed: false,
       },
@@ -52,8 +48,7 @@ export default class TodoApp extends Component {
 
   deleteItem = (id) => {
     this.setState(({ data }) => {
-      const index = data.findIndex((elem) => elem.id === id);
-      const newData = [...data.slice(0, index), ...data.slice(index + 1)];
+      const newData = data.filter((elem) => elem.id !== id);
 
       return {
         data: newData,
@@ -61,8 +56,8 @@ export default class TodoApp extends Component {
     });
   };
 
-  addItem = (description, timerMin, timerSec) => {
-    const newItem = TodoApp.createTodoItem(description, timerMin, timerSec);
+  addItem = (description, timeLeft) => {
+    const newItem = TodoApp.createTodoItem(description, timeLeft);
 
     this.setState(({ data }) => {
       const newData = [newItem, ...data];
