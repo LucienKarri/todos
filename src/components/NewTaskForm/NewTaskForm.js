@@ -6,6 +6,7 @@ import './NewTaskForm.css';
 export default class NewTaskForm extends Component {
   state = {
     title: '',
+    timeLeft: '',
     timerMin: '',
     timerSec: '',
   };
@@ -33,12 +34,15 @@ export default class NewTaskForm extends Component {
     const { title, timerMin, timerSec } = this.state;
 
     event.preventDefault();
-    onTaskAdded(title, timerMin, timerSec);
-    this.setState({
-      title: '',
-      timerMin: '',
-      timerSec: '',
-    });
+    if (title) {
+      const timeLeft = Number(timerMin) * 60 + Number(timerSec);
+      onTaskAdded(title, timeLeft || null);
+      this.setState({
+        title: '',
+        timerMin: '',
+        timerSec: '',
+      });
+    }
   };
 
   render() {
