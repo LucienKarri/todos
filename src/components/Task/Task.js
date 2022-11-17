@@ -46,7 +46,7 @@ const Task = ({ task, onTaskDeleted, onToggleCompleted, onTaskEdited }) => {
         />
         <label htmlFor={task.id}>
           <span className="title">{task.description}</span>
-          <TaskTimer timeLeft={task.timeLeft} id={task.id} isChecked={task.completed} onTaskEdited={onTaskEdited} />
+          <TaskTimer time={task.timeLeft} id={task.id} isChecked={task.completed} onTaskEdited={onTaskEdited} />
           <span className="description">{formatDistanceToNow(task.created)}</span>
         </label>
         <button type="button" className="icon icon-edit" onClick={onEditClick} />

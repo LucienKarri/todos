@@ -10,21 +10,21 @@ const initialData = [
   {
     id: uuidv4(),
     description: 'learn react',
-    timeLeft: 123,
+    timeLeft: 3,
     created: new Date(),
     completed: false,
   },
   {
     id: uuidv4(),
     description: 'practice react',
-    timeLeft: 234,
+    timeLeft: 3,
     created: new Date(),
     completed: false,
   },
   {
     id: uuidv4(),
     description: 'relax',
-    timeLeft: 345,
+    timeLeft: 3,
     created: new Date(),
     completed: false,
   },
@@ -50,17 +50,22 @@ const TodoApp = () => {
   };
 
   const deleteTask = (id) => {
-    setTodos(todos.filter((task) => task.id !== id));
+    setTodos((todos) => {
+      const newTodos = todos.filter((task) => task.id !== id);
+      return newTodos;
+    });
   };
 
   const editTask = (id, editValue) => {
-    const newTodos = todos.map((task) => {
-      if (task.id === id) {
-        return { ...task, ...editValue };
-      }
-      return task;
+    setTodos((todos) => {
+      const newTodos = todos.map((task) => {
+        if (task.id === id) {
+          return { ...task, ...editValue };
+        }
+        return task;
+      });
+      return newTodos;
     });
-    setTodos(newTodos);
   };
 
   const onToggleCompleted = (id) => {

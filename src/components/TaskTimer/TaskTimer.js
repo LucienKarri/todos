@@ -1,45 +1,65 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState, useRef } from 'react';
 
-const TaskTimer = ({ min, sec, isChecked }) => {
-  const [time, setTime] = useState(Number(min * 60) + Number(sec));
+const TaskTimer = ({ time, isChecked, id, onTaskEdited }) => {
+  const [timeLeft, setTimeLeft] = useState(time);
   const [isRunning, setIsRunning] = useState(false);
+  const [timerId, setTimerId] = useState(null);
+  const currentTimer = useRef();
+  currentTimer.current = [timerId, timeLeft];
 
   useEffect(() => {
-    let timerID = null;
-    if (isRunning && !isChecked) {
-      timerID = setInterval(() => {
-        setTime((time) => time + 1);
-      }, 1000);
-    } else {
-      clearInterval(timerID);
-      setIsRunning(false);
+    if (!timeLeft || isChecked) {
+      stopTimer();
     }
-    return () => clearInterval(timerID);
-  }, [isRunning, isChecked]);
+  }, [timeLeft, isChecked]);
 
-  const onClickHandler = () => {
-    if (!isChecked) {
-      setIsRunning((isRunning) => !isRunning);
-    }
+  useEffect(() => {
+    return () => {
+      clearInterval(currentTimer.current[0]);
+      onTaskEdited(id, { timeLeft: currentTimer.current[1] });
+    };
+  }, []);
+
+  const startTimer = () => {
+    setTimerId(
+      setInterval(() => {
+        setTimeLeft((timeLeft) => timeLeft - 1);
+      }, 1000)
+    );
+    setIsRunning(true);
   };
 
-  const minutes = Math.floor(time / 60)
-    .toString()
-    .padStart(2, 0);
-  const seconds = (time - minutes * 60).toString().padStart(2, 0);
+  const stopTimer = () => {
+    clearInterval(timerId);
+    setIsRunning(false);
+    onTaskEdited(id, { timeLeft });
+  };
 
-  return (
-    <span className="description timer">
-      {isRunning ? (
-        <button className="icon icon-pause" onClick={() => onClickHandler()}></button>
-      ) : (
-        <button className="icon icon-play" onClick={() => onClickHandler()}></button>
-      )}
-      <span>
-        {minutes}:{seconds}
-      </span>
-    </span>
+  const transformTimeLeft = (time) => {
+    const hour = Math.floor(time / 3600)
+      .toString()
+      .padStart(2, '0');
+    const min = Math.floor((time - hour * 3600) / 60)
+      .toString()
+      .padStart(2, '0');
+    const sec = (time - hour * 3600 - min * 60).toString().padStart(2, '0');
+
+    return ` ${hour}:${min}:${sec} `;
+  };
+
+  const button = isRunning ? (
+    <button className="icon icon-pause" onClick={() => stopTimer()}></button>
+  ) : (
+    <button className="icon icon-play" onClick={() => startTimer()}></button>
   );
+
+  return timeLeft !== null ? (
+    <span className="description timer">
+      {timeLeft && !isChecked ? button : null}
+      <span>{timeLeft ? transformTimeLeft(timeLeft) : 'game over'}</span>
+    </span>
+  ) : null;
 };
 
 export default TaskTimer;
