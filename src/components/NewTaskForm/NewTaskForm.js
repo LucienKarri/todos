@@ -6,7 +6,6 @@ import './NewTaskForm.css';
 export default class NewTaskForm extends Component {
   state = {
     title: '',
-    timeLeft: '',
     timerMin: '',
     timerSec: '',
   };
