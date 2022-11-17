@@ -1,45 +1,24 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const TaskTimer = ({ time, isChecked, id, onTaskEdited }) => {
   const [timeLeft, setTimeLeft] = useState(time);
   const [isRunning, setIsRunning] = useState(false);
-  const [timerId, setTimerId] = useState(null);
-  const lastTimerId = useRef();
-  const lastTime = useRef();
 
   useEffect(() => {
-    lastTime.current = timeLeft;
-    if (!timeLeft || isChecked) {
-      stopTimer();
+    if (!timeLeft || !isRunning || isChecked) {
+      setIsRunning(false);
+      onTaskEdited(id, { timeLeft });
+      return;
     }
-  }, [timeLeft, isChecked]);
-
-  useEffect(() => {
-    lastTimerId.current = timerId;
-  }, [timerId]);
-
-  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTimeLeft((timeLeft) => timeLeft - 1);
+    }, 1000);
     return () => {
-      clearInterval(lastTimerId.current);
-      onTaskEdited(id, { timeLeft: lastTime.current });
+      onTaskEdited(id, { timeLeft });
+      clearInterval(intervalId);
     };
-  }, []);
-
-  const startTimer = () => {
-    setTimerId(
-      setInterval(() => {
-        setTimeLeft((timeLeft) => timeLeft - 1);
-      }, 1000)
-    );
-    setIsRunning(true);
-  };
-
-  const stopTimer = () => {
-    clearInterval(timerId);
-    setIsRunning(false);
-    onTaskEdited(id, { timeLeft });
-  };
+  }, [timeLeft, isRunning, isChecked]);
 
   const transformTimeLeft = (time) => {
     const hour = Math.floor(time / 3600)
@@ -54,9 +33,9 @@ const TaskTimer = ({ time, isChecked, id, onTaskEdited }) => {
   };
 
   const button = isRunning ? (
-    <button className="icon icon-pause" onClick={() => stopTimer()}></button>
+    <button className="icon icon-pause" onClick={() => setIsRunning(false)}></button>
   ) : (
-    <button className="icon icon-play" onClick={() => startTimer()}></button>
+    <button className="icon icon-play" onClick={() => setIsRunning(true)}></button>
   );
 
   return timeLeft !== null ? (
