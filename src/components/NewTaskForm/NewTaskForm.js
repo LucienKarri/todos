@@ -11,7 +11,8 @@ const NewTaskForm = ({ onTaskAdded }) => {
   const onSubmit = (e) => {
     e.preventDefault();
     if (title) {
-      onTaskAdded(title, min, sec);
+      const timeLeft = Number(min) * 60 + Number(sec);
+      onTaskAdded(title, timeLeft || null);
       setTitle('');
       setMin('');
       setSec('');
@@ -19,7 +20,7 @@ const NewTaskForm = ({ onTaskAdded }) => {
   };
 
   return (
-    <form onSubmit={(e) => onSubmit(e)} className="new-todo-form">
+    <form onSubmit={onSubmit} className="new-todo-form">
       <input
         autoFocus
         className="new-todo"
