@@ -10,8 +10,8 @@ function TaskList({ tasks, onTaskDeleted, onToggleCompleted, onTaskEdited }) {
       <Task
         key={elem.id}
         task={elem}
-        onTaskDeleted={() => onTaskDeleted(elem.id)}
-        onToggleCompleted={() => onToggleCompleted(elem.id)}
+        onTaskDeleted={onTaskDeleted}
+        onToggleCompleted={onToggleCompleted}
         onTaskEdited={onTaskEdited}
       />
     );

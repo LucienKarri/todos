@@ -7,7 +7,7 @@ import TaskTimer from '../TaskTimer';
 
 const Task = ({ task, onTaskDeleted, onToggleCompleted, onTaskEdited }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState(task.description);
   const [className, setClassName] = useState('');
 
   useEffect(() => {
@@ -16,14 +16,13 @@ const Task = ({ task, onTaskDeleted, onToggleCompleted, onTaskEdited }) => {
 
   const onEditClick = () => {
     setIsEditing(true);
-    setTitle(task.description);
     setClassName('editing');
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
     if (title !== task.description) {
-      onTaskEdited(task.id, title);
+      onTaskEdited(task.id, { description: title });
     }
     setIsEditing(false);
     task.completed ? setClassName('completed') : setClassName('');
@@ -42,16 +41,16 @@ const Task = ({ task, onTaskDeleted, onToggleCompleted, onTaskEdited }) => {
           className="toggle"
           type="checkbox"
           id={task.id}
-          onClick={onToggleCompleted}
+          onClick={() => onToggleCompleted(task.id)}
           defaultChecked={task.completed}
         />
         <label htmlFor={task.id}>
           <span className="title">{task.description}</span>
-          <TaskTimer min={task.min} sec={task.sec} isChecked={task.completed} />
+          <TaskTimer timeLeft={task.timeLeft} id={task.id} isChecked={task.completed} onTaskEdited={onTaskEdited} />
           <span className="description">{formatDistanceToNow(task.created)}</span>
         </label>
-        <button type="button" className="icon icon-edit" onClick={() => onEditClick()} />
-        <button type="button" className="icon icon-destroy" onClick={onTaskDeleted} />
+        <button type="button" className="icon icon-edit" onClick={onEditClick} />
+        <button type="button" className="icon icon-destroy" onClick={() => onTaskDeleted(task.id)} />
       </div>
       {isEditing ? editForm : null}
     </li>
