@@ -68,17 +68,21 @@ export default class TodoApp extends Component {
     });
   };
 
-  editItem = (id, description) => {
-    this.setState(({ data }) => {
-      const index = data.findIndex((elem) => elem.id === id);
-      const oldItem = data[index];
-      const newItem = { ...oldItem, description };
-      const newData = [...data.slice(0, index), newItem, ...data.slice(index + 1)];
+  editItem = (id, editValue) => {
+    const { data } = this.state;
+    const index = data.findIndex((elem) => elem.id === id);
+    if (index >= 0) {
+      this.setState(({ data }) => {
+        const index = data.findIndex((elem) => elem.id === id);
+        const oldItem = data[index];
+        const newItem = { ...oldItem, ...editValue };
+        const newData = [...data.slice(0, index), newItem, ...data.slice(index + 1)];
 
-      return {
-        data: newData,
-      };
-    });
+        return {
+          data: newData,
+        };
+      });
+    }
   };
 
   onToggleCompleted = (id) => {

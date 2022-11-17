@@ -2,78 +2,86 @@ import React, { Component } from 'react';
 
 export default class TaskTimer extends Component {
   state = {
-    min: null,
-    sec: null,
-    started: false,
+    timeLeft: null,
+    isStarted: false,
   };
 
   componentDidMount() {
-    const { timerMin, timerSec } = this.props;
-
     this.setState({
-      min: timerMin || 0,
-      sec: timerSec || 0,
+      timeLeft: this.props.timeLeft,
     });
   }
 
-  componentDidUpdate() {
-    if (this.props.isChecked && this.state.started) {
-      clearInterval(this.timerID);
-      this.setState({ started: false });
+  componentDidUpdate(prevProps) {
+    const { isChecked } = this.props;
+
+    if (prevProps.isChecked !== isChecked) {
+      this.onPauseClick();
     }
   }
 
   componentWillUnmount() {
+    const { id, onEdit } = this.props;
+
     clearInterval(this.timerID);
+    onEdit(id, { timeLeft: this.state.timeLeft });
   }
 
   tick = () => {
-    this.setState(({ min, sec }) => {
-      if (sec < 59) {
-        sec++;
-      } else {
-        sec = 0;
-        min++;
-      }
+    const { timeLeft } = this.state;
 
-      return {
-        min,
-        sec,
-      };
-    });
-  };
-
-  transformTimer = (num) => {
-    return num < 10 ? '0' + num : num;
+    if (timeLeft > 0) {
+      this.setState({
+        timeLeft: timeLeft - 1,
+      });
+    } else {
+      clearInterval(this.timerID);
+      this.setState({
+        timeLeft,
+        isStarted: false,
+      });
+    }
   };
 
   onPlayClick = () => {
-    if (this.state.started || this.props.isChecked) {
-      clearInterval(this.timerID);
-      this.setState({ started: false });
-    } else {
-      this.setState({ started: true });
+    if (!this.state.isStarted && !this.props.isChecked) {
       this.timerID = setInterval(() => this.tick(), 1000);
+      this.setState({ isStarted: true });
     }
   };
 
   onPauseClick = () => {
     clearInterval(this.timerID);
-    this.setState({ started: false });
+    this.setState({ isStarted: false });
+  };
+
+  transformTimeLeft = (timeLeft) => {
+    const hour = Math.floor(timeLeft / 3600)
+      .toString()
+      .padStart(2, '0');
+    const min = Math.floor((timeLeft - hour * 3600) / 60)
+      .toString()
+      .padStart(2, '0');
+    const sec = (timeLeft - hour * 3600 - min * 60).toString().padStart(2, '0');
+
+    return ` ${hour}:${min}:${sec} `;
   };
 
   render() {
-    const { min, sec, started } = this.state;
-
-    return (
-      <span className="description">
-        {started ? (
-          <button className="icon icon-pause" onClick={this.onPauseClick}></button>
-        ) : (
-          <button className="icon icon-play" onClick={this.onPlayClick}></button>
-        )}
-        <span>{` ${this.transformTimer(min)}:${this.transformTimer(sec)} `}</span>
-      </span>
+    const { isChecked } = this.props;
+    const { timeLeft, isStarted } = this.state;
+    const timer = timeLeft ? this.transformTimeLeft(timeLeft) : 'time is over';
+    const button = isStarted ? (
+      <button className="icon icon-pause" onClick={this.onPauseClick}></button>
+    ) : (
+      <button className="icon icon-play" onClick={this.onPlayClick}></button>
     );
+
+    return timeLeft !== null ? (
+      <span className="description">
+        {timeLeft && !isChecked ? button : null}
+        <span>{timer}</span>
+      </span>
+    ) : null;
   }
 }
