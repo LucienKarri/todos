@@ -5,19 +5,24 @@ const TaskTimer = ({ time, isChecked, id, onTaskEdited }) => {
   const [timeLeft, setTimeLeft] = useState(time);
   const [isRunning, setIsRunning] = useState(false);
   const [timerId, setTimerId] = useState(null);
-  const currentTimer = useRef();
-  currentTimer.current = [timerId, timeLeft];
+  const lastTimerId = useRef();
+  const lastTime = useRef();
 
   useEffect(() => {
+    lastTime.current = timeLeft;
     if (!timeLeft || isChecked) {
       stopTimer();
     }
   }, [timeLeft, isChecked]);
 
   useEffect(() => {
+    lastTimerId.current = timerId;
+  }, [timerId]);
+
+  useEffect(() => {
     return () => {
-      clearInterval(currentTimer.current[0]);
-      onTaskEdited(id, { timeLeft: currentTimer.current[1] });
+      clearInterval(lastTimerId.current);
+      onTaskEdited(id, { timeLeft: lastTime.current });
     };
   }, []);
 
